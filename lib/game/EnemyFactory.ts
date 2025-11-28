@@ -5,6 +5,7 @@ import { EnemyType, EnemyConfig } from './types';
 
 export class EnemyFactory {
   // Enemy configurations per level
+  // Using Partial<> allows each level to only define the enemies that appear in that level
   private static enemyConfigs: Record<number, Partial<Record<EnemyType, EnemyConfig>>> = {
     1: {
       [EnemyType.STARKENT]: {
