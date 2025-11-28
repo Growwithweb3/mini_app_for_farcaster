@@ -1,7 +1,7 @@
 // Enemy factory - creates enemies based on level
 
-import { Enemy, EnemyConfig } from './Enemy';
-import { EnemyType } from './types';
+import { Enemy } from './Enemy';
+import { EnemyType, EnemyConfig } from './types';
 
 export class EnemyFactory {
   // Enemy configurations per level
