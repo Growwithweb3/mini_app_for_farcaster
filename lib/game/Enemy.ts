@@ -1,0 +1,143 @@
+// Enemy class - moves from right to left, can shoot
+
+import { Position, Size, EnemyType, EnemyConfig, Bullet } from './types';
+
+export class Enemy {
+  public position: Position;
+  public size: Size;
+  public health: number;
+  public maxHealth: number;
+  public speed: number;
+  public config: EnemyConfig;
+  public image: HTMLImageElement | null = null;
+  public lastShotTime: number = 0;
+  public verticalDirection: number = 1; // 1 for down, -1 for up (for dodging)
+
+  constructor(config: EnemyConfig, canvasWidth: number, canvasHeight: number) {
+    this.config = config;
+    this.size = { width: config.width, height: config.height };
+    this.position = {
+      x: canvasWidth,
+      y: Math.random() * (canvasHeight - this.size.height),
+    };
+    this.health = config.health;
+    this.maxHealth = config.health;
+    this.speed = config.speed;
+    this.loadImage();
+  }
+
+  private loadImage(): void {
+    this.image = new Image();
+    this.image.src = this.config.imagePath;
+  }
+
+  // Update enemy position - moves left, slight vertical movement
+  update(canvasWidth: number, canvasHeight: number): void {
+    // Move left
+    this.position.x -= this.speed;
+
+    // Slight vertical movement to dodge bullets
+    this.position.y += this.verticalDirection * 0.5;
+    
+    // Bounce off top/bottom edges
+    if (this.position.y <= 0 || this.position.y >= canvasHeight - this.size.height) {
+      this.verticalDirection *= -1;
+    }
+    this.position.y = Math.max(0, Math.min(canvasHeight - this.size.height, this.position.y));
+  }
+
+  // Check if enemy can shoot
+  canShoot(currentTime: number): boolean {
+    return (
+      this.config.canShoot &&
+      currentTime - this.lastShotTime >= this.config.shootInterval
+    );
+  }
+
+  // Shoot bullet at player
+  shoot(playerPosition: Position): Bullet | null {
+    const currentTime = Date.now();
+    if (!this.canShoot(currentTime)) {
+      return null;
+    }
+
+    this.lastShotTime = currentTime;
+
+    // Calculate direction to player
+    const dx = playerPosition.x - this.position.x;
+    const dy = playerPosition.y - this.position.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    const speed = 4;
+
+    return {
+      x: this.position.x,
+      y: this.position.y + this.size.height / 2,
+      vx: (dx / distance) * speed,
+      vy: (dy / distance) * speed,
+      width: 8,
+      height: 8,
+      isPlayerBullet: false,
+      damage: 10,
+    };
+  }
+
+  // Take damage
+  takeDamage(amount: number): void {
+    this.health = Math.max(0, this.health - amount);
+  }
+
+  // Check if enemy is alive
+  isAlive(): boolean {
+    return this.health > 0;
+  }
+
+  // Check if enemy is off screen
+  isOffScreen(): boolean {
+    return this.position.x + this.size.width < 0;
+  }
+
+  // Draw enemy on canvas
+  draw(ctx: CanvasRenderingContext2D): void {
+    if (this.image && this.image.complete) {
+      ctx.drawImage(
+        this.image,
+        this.position.x,
+        this.position.y,
+        this.size.width,
+        this.size.height
+      );
+    } else {
+      // Fallback rectangle if image not loaded
+      ctx.fillStyle = this.config.level === 1 ? '#10B981' : 
+                      this.config.level === 2 ? '#F59E0B' : '#EF4444';
+      ctx.fillRect(
+        this.position.x,
+        this.position.y,
+        this.size.width,
+        this.size.height
+      );
+    }
+
+    // Draw health bar
+    const barWidth = this.size.width;
+    const barHeight = 4;
+    const healthPercent = this.health / this.maxHealth;
+
+    ctx.fillStyle = '#FF0000';
+    ctx.fillRect(
+      this.position.x,
+      this.position.y - 8,
+      barWidth,
+      barHeight
+    );
+
+    ctx.fillStyle = '#00FF00';
+    ctx.fillRect(
+      this.position.x,
+      this.position.y - 8,
+      barWidth * healthPercent,
+      barHeight
+    );
+  }
+}
+

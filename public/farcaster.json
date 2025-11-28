@@ -1,0 +1,10 @@
+{
+  "name": "Base the Shooter",
+  "iconUrl": "https://baseshooter.xyz/icon.png",
+  "homeUrl": "https://baseshooter.xyz/",
+  "splashImageUrl": "https://baseshooter.xyz/splash.png",
+  "splashBackgroundColor": "#000000",
+  "requiredChains": ["eip155:8453"],
+  "requiredCapabilities": ["actions.signIn", "wallet.getEthereumProvider"]
+}
+
