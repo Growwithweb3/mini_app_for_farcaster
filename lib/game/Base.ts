@@ -25,8 +25,11 @@ export class Base {
   }
 
   private loadImage(): void {
-    this.image = new Image();
-    this.image.src = this.imagePath;
+    // Only load images in browser environment (not during SSR)
+    if (typeof window !== 'undefined' && typeof Image !== 'undefined') {
+      this.image = new Image();
+      this.image.src = this.imagePath;
+    }
   }
 
   // Move up

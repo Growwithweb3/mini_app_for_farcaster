@@ -27,8 +27,11 @@ export class Enemy {
   }
 
   private loadImage(): void {
-    this.image = new Image();
-    this.image.src = this.config.imagePath;
+    // Only load images in browser environment (not during SSR)
+    if (typeof window !== 'undefined' && typeof Image !== 'undefined') {
+      this.image = new Image();
+      this.image.src = this.config.imagePath;
+    }
   }
 
   // Update enemy position - moves left, slight vertical movement

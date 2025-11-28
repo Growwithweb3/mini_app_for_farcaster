@@ -5,7 +5,7 @@ import { EnemyType, EnemyConfig } from './types';
 
 export class EnemyFactory {
   // Enemy configurations per level
-  private static enemyConfigs: Record<number, Record<EnemyType, EnemyConfig>> = {
+  private static enemyConfigs: Record<number, Partial<Record<EnemyType, EnemyConfig>>> = {
     1: {
       [EnemyType.STARKENT]: {
         type: EnemyType.STARKENT,
@@ -114,8 +114,12 @@ export class EnemyFactory {
     if (!configs) return null;
 
     const enemyTypes = Object.keys(configs) as EnemyType[];
+    if (enemyTypes.length === 0) return null;
+    
     const randomType = enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
     const config = configs[randomType];
+    
+    if (!config) return null;
 
     return new Enemy(config, canvasWidth, canvasHeight);
   }

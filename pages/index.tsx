@@ -1,5 +1,19 @@
 import Head from 'next/head';
-import { Game } from '@/components/Game';
+import dynamic from 'next/dynamic';
+
+// Dynamically import Game component with SSR disabled
+// This prevents server-side rendering issues with browser APIs (Image, Canvas, etc.)
+const Game = dynamic(() => import('@/components/Game').then((mod) => ({ default: mod.Game })), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">
+      <div className="text-center">
+        <div className="text-2xl font-bold mb-2">Loading Base the Shooter...</div>
+        <div className="text-gray-400">Preparing your game</div>
+      </div>
+    </div>
+  ),
+});
 
 export default function Home() {
   return (
