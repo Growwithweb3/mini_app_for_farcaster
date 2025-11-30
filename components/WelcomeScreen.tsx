@@ -33,23 +33,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onPlayGame }) => {
     if (typeof window === 'undefined') return;
 
     try {
-      // Check Farcaster SDK first
-      const sdkModule = await import('@farcaster/miniapp-sdk').catch(() => null);
-      if (sdkModule) {
-        const sdk = sdkModule.default || sdkModule;
-        if (sdk?.user?.address) {
-          setWallet({
-            connected: true,
-            address: sdk.user.address,
-            isLoading: false,
-            error: null,
-          });
-          setSignedIn(true);
-          return;
-        }
-      }
-
-      // Check MetaMask or other Web3 providers
+      // Check MetaMask or other Web3 providers first
       const ethereum = (window as any).ethereum;
       if (ethereum) {
         const accounts = await ethereum.request({ method: 'eth_accounts' });
@@ -62,6 +46,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onPlayGame }) => {
           });
           // Auto sign-in if already connected
           setSignedIn(true);
+          return;
         }
       }
     } catch (error) {
@@ -75,22 +60,32 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onPlayGame }) => {
     try {
       if (typeof window === 'undefined') return;
 
-      // Try Farcaster SDK first
+      // Try Farcaster SDK first (if available)
       try {
         const sdkModule = await import('@farcaster/miniapp-sdk');
         const sdk = sdkModule.default || sdkModule;
         
-        if (sdk?.actions?.signIn) {
-          const result = await sdk.actions.signIn();
-          if (result?.address) {
-            setWallet({
-              connected: true,
-              address: result.address,
-              isLoading: false,
-              error: null,
-            });
-            setSignedIn(true);
-            return;
+        // Check if signIn action exists and call it
+        if (sdk && typeof sdk === 'object' && 'actions' in sdk) {
+          const actions = (sdk as any).actions;
+          if (actions && typeof actions.signIn === 'function') {
+            try {
+              const result = await actions.signIn();
+              // Handle different possible return types
+              const address = result?.address || result?.user?.address || (result && typeof result === 'string' ? result : null);
+              if (address) {
+                setWallet({
+                  connected: true,
+                  address: address,
+                  isLoading: false,
+                  error: null,
+                });
+                setSignedIn(true);
+                return;
+              }
+            } catch (fcSignInError) {
+              console.log('Farcaster sign-in failed, trying Web3 wallet');
+            }
           }
         }
       } catch (fcError) {
