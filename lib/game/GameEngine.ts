@@ -14,7 +14,7 @@ export class GameEngine {
   public canvasWidth: number;
   public canvasHeight: number;
   private lastSpawnTime: number = 0;
-  private spawnInterval: number = 2000; // 2 seconds default
+  private spawnInterval: number = 1000; // 2 seconds default
   private levelDurations: Record<number, number> = {
     1: 30000, // 30 seconds
     2: 60000, // 60 seconds
@@ -143,7 +143,7 @@ export class GameEngine {
       this.lastSpawnTime = currentTime;
 
       // Decrease spawn interval as level increases (more enemies)
-      this.spawnInterval = Math.max(800, 2000 - (this.gameState.level - 1) * 200);
+      this.spawnInterval = Math.max(500, 1500 - (this.gameState.level - 1) * 150);
     }
   }
 
