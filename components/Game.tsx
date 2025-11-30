@@ -134,8 +134,22 @@ export const Game: React.FC = () => {
     }
   }, [gameEngine]);
 
+  const [resetKey, setResetKey] = useState(0);
+  
   const handleReset = useCallback(() => {
     gameEngine.reset();
+    // Reset Level 3 completion state
+    setLevel3Completed(false);
+    setMintingState({
+      isLoading: false,
+      success: false,
+      error: null,
+      txHash: null,
+    });
+    // Force re-render by updating key
+    setResetKey(prev => prev + 1);
+    // Force keys state update to trigger re-render
+    setKeys(new Set());
   }, [gameEngine]);
 
   const handlePause = useCallback(() => {
@@ -297,7 +311,7 @@ export const Game: React.FC = () => {
       </div>
 
       {/* Game Canvas */}
-      <div className="relative">
+      <div className="relative" key={resetKey}>
         <GameCanvas
           gameEngine={gameEngine}
           width={CANVAS_WIDTH}

@@ -22,7 +22,7 @@ export default function Home() {
         <title>Base the Shooter - Farcaster Mini App</title>
         <meta name="description" content="Base the Shooter - A 2D shooter game on Base chain" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        {/* Favicon - optional, won't cause 404 if missing */}
         
         {/* Farcaster Mini App Meta Tags */}
         <meta property="fc:frame" content="vNext" />
