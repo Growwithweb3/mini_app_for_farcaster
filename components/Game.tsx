@@ -5,11 +5,13 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { GameEngine } from '@/lib/game/GameEngine';
 import { GameCanvas } from './GameCanvas';
+import { WelcomeScreen } from './WelcomeScreen';
 
 const CANVAS_WIDTH = 800;
 const CANVAS_HEIGHT = 600;
 
 export const Game: React.FC = () => {
+  const [showWelcome, setShowWelcome] = useState(true);
   const [gameEngine] = useState(() => new GameEngine(CANVAS_WIDTH, CANVAS_HEIGHT));
   const [keys, setKeys] = useState<Set<string>>(new Set());
   const gameEngineRef = useRef(gameEngine);
@@ -133,6 +135,11 @@ export const Game: React.FC = () => {
     0,
     Math.ceil((gameEngine.gameState.levelDuration - (Date.now() - gameEngine.gameState.levelStartTime)) / 1000)
   );
+
+  // Show welcome screen first
+  if (showWelcome) {
+    return <WelcomeScreen onPlayGame={() => setShowWelcome(false)} />;
+  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 p-4">
