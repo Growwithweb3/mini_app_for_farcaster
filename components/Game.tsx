@@ -82,7 +82,7 @@ export const Game: React.FC = () => {
           if (keys.has('ArrowRight') && !engine.gameState.isGameOver && !engine.gameState.isPaused) {
             engine.shoot();
           }
-        }, 750);
+        }, 1500);
       }
     }
 
@@ -103,7 +103,7 @@ export const Game: React.FC = () => {
   }, []);
 
   const lastShootTimeRef = useRef<number>(0);
-  const SHOOT_COOLDOWN = 750; 
+  const SHOOT_COOLDOWN = 1500; 
 
   const handleShoot = useCallback(() => {
     const now = Date.now();
