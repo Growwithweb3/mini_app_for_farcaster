@@ -263,40 +263,7 @@ export const Game: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 p-4 relative">
-      {/* Wallet Disconnect Warning - Left Side */}
-      <div className="hidden lg:block fixed left-4 top-1/2 transform -translate-y-1/2 z-10 max-w-xs">
-        <div className="bg-yellow-900/90 border-2 border-yellow-500 rounded-lg p-4 text-yellow-100 shadow-lg">
-          <div className="flex items-start gap-2 mb-2">
-            <svg className="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
-            <h3 className="font-bold text-yellow-300 text-sm">Wallet Safety Reminder</h3>
-          </div>
-          <p className="text-xs text-yellow-200 mb-2">
-            Make sure to disconnect your wallet after you have done with game.
-          </p>
-          <p className="text-xs text-yellow-200/80">
-            Don't worry about hacking issue, still burner wallet is recommended.
-          </p>
-        </div>
-      </div>
-
-      {/* Mobile Wallet Warning - Top */}
-      <div className="lg:hidden w-full max-w-4xl mb-4">
-        <div className="bg-yellow-900/90 border-2 border-yellow-500 rounded-lg p-3 text-yellow-100">
-          <div className="flex items-start gap-2">
-            <svg className="w-4 h-4 text-yellow-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
-            <div className="text-xs">
-              <p className="font-semibold mb-1">Disconnect wallet after playing</p>
-              <p className="text-yellow-200/80">Burner wallet recommended for safety</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 p-4">
       {/* Game Info Bar */}
       <div className="w-full max-w-4xl mb-4 bg-gray-800 rounded-lg p-4 text-white">
         <div className="flex flex-wrap items-center justify-between gap-4">
