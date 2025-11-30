@@ -82,7 +82,7 @@ export const Game: React.FC = () => {
           if (keys.has('ArrowRight') && !engine.gameState.isGameOver && !engine.gameState.isPaused) {
             engine.shoot();
           }
-        }, 350);
+        }, 750);
       }
     }
 
@@ -103,7 +103,7 @@ export const Game: React.FC = () => {
   }, []);
 
   const lastShootTimeRef = useRef<number>(0);
-  const SHOOT_COOLDOWN = 350; // Same cooldown as keyboard (350ms)
+  const SHOOT_COOLDOWN = 750; 
 
   const handleShoot = useCallback(() => {
     const now = Date.now();

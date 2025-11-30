@@ -11,7 +11,7 @@ export class EnemyFactory {
       [EnemyType.STARKENT]: {
         type: EnemyType.STARKENT,
         health: 30,
-        speed: 2,
+        speed: 3,
         imagePath: '/images/starkent-the-enemy.png',
         width: 50,
         height: 50,
@@ -22,7 +22,7 @@ export class EnemyFactory {
       [EnemyType.SCROLL]: {
         type: EnemyType.SCROLL,
         health: 30,
-        speed: 2,
+        speed: 3,
         imagePath: '/images/scroll-the-enemy.jpg',
         width: 50,
         height: 50,
@@ -33,7 +33,7 @@ export class EnemyFactory {
       [EnemyType.ZKSYN]: {
         type: EnemyType.ZKSYN,
         health: 30,
-        speed: 2,
+        speed: 3,
         imagePath: '/images/zksyn-the-enemy.jpg',
         width: 50,
         height: 50,
@@ -44,7 +44,7 @@ export class EnemyFactory {
       [EnemyType.TAIKO]: {
         type: EnemyType.TAIKO,
         health: 30,
-        speed: 2,
+        speed: 3,
         imagePath: '/images/taiko-the-enemy.png',
         width: 50,
         height: 50,
@@ -57,23 +57,23 @@ export class EnemyFactory {
       [EnemyType.LINEA]: {
         type: EnemyType.LINEA,
         health: 50,
-        speed: 3,
+        speed: 5,
         imagePath: '/images/linea-the-enemy.png',
         width: 55,
         height: 55,
         canShoot: true,
-        shootInterval: 2000, // 2 seconds
+        shootInterval: 1000, // 2 seconds
         level: 2,
       },
       [EnemyType.OP]: {
         type: EnemyType.OP,
         health: 50,
-        speed: 3,
+        speed: 5,
         imagePath: '/images/op-the-enemy.jpg',
         width: 55,
         height: 55,
         canShoot: true,
-        shootInterval: 2000,
+        shootInterval: 1000,
         level: 2,
       },
     },
@@ -81,12 +81,12 @@ export class EnemyFactory {
       [EnemyType.ARB]: {
         type: EnemyType.ARB,
         health: 100,
-        speed: 1.5,
+        speed: 7.5,
         imagePath: '/images/arb-the-enemy.jpg',
         width: 70,
         height: 70,
         canShoot: true,
-        shootInterval: 1500, // 1.5 seconds
+        shootInterval: 500, // 1.5 seconds
         level: 3,
         bulletsPerShot: 2, // Shoot 2 bullets at a time
         bulletSpeed: 6, // Faster bullets for level 3
@@ -94,12 +94,12 @@ export class EnemyFactory {
       [EnemyType.POLYGON]: {
         type: EnemyType.POLYGON,
         health: 100,
-        speed: 1.5,
+        speed: 7.5,
         imagePath: '/images/polygon-the-enemy.jpg',
         width: 70,
         height: 70,
         canShoot: true,
-        shootInterval: 1500,
+        shootInterval: 500,
         level: 3,
         bulletsPerShot: 2, // Shoot 2 bullets at a time
         bulletSpeed: 6, // Faster bullets for level 3
