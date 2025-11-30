@@ -19,7 +19,7 @@ export class Base {
     };
     this.health = 100;
     this.maxHealth = 100;
-    this.speed = 10;
+    this.speed = 7;
     this.imagePath = '/images/base-the-shooter.jpg';
     this.loadImage();
   }

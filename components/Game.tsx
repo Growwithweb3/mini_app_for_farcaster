@@ -330,7 +330,7 @@ export const Game: React.FC = () => {
                 <div className="mb-6 p-4 bg-gradient-to-r from-purple-900/80 to-blue-900/80 rounded-lg border-2 border-purple-500">
                   <h3 className="text-2xl font-bold mb-2 text-yellow-300">🎉 Level 3 Completed!</h3>
                   <p className="text-sm text-gray-300 mb-4">
-                    You've proven Base is the best L2! Mint your SBT to commemorate this achievement.
+                    You've proven you support base! Mint your SBT to commemorate this achievement.
                   </p>
                   
                   {/* Mint Button */}

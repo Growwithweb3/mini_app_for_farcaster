@@ -150,12 +150,21 @@ export class GameEngine {
   // Move to next level
   nextLevel(): void {
     if (this.gameState.level < 3) {
+      const previousLevel = this.gameState.level;
       this.gameState.level++;
       this.enemies = [];
       this.bullets = [];
       this.gameState.levelStartTime = Date.now();
       this.gameState.levelDuration = this.levelDurations[this.gameState.level];
       this.lastSpawnTime = Date.now();
+      
+      // Reset health to 100 after Level 2 (only after level 2)
+      if (previousLevel === 2) {
+        this.base.health = 100;
+        this.base.maxHealth = 100;
+        this.gameState.playerHealth = 100;
+        this.gameState.maxPlayerHealth = 100;
+      }
     } else {
       // Game completed
       this.gameState.isGameOver = true;
