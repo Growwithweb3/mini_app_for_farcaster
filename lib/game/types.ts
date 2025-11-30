@@ -39,6 +39,8 @@ export interface EnemyConfig {
   canShoot: boolean;
   shootInterval: number;
   level: number;
+  bulletsPerShot?: number; // Number of bullets to shoot at once (default: 1)
+  bulletSpeed?: number; // Speed of enemy bullets (default: 4)
 }
 
 export interface Bullet {

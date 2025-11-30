@@ -88,6 +88,8 @@ export class EnemyFactory {
         canShoot: true,
         shootInterval: 1500, // 1.5 seconds
         level: 3,
+        bulletsPerShot: 2, // Shoot 2 bullets at a time
+        bulletSpeed: 6, // Faster bullets for level 3
       },
       [EnemyType.POLYGON]: {
         type: EnemyType.POLYGON,
@@ -99,6 +101,8 @@ export class EnemyFactory {
         canShoot: true,
         shootInterval: 1500,
         level: 3,
+        bulletsPerShot: 2, // Shoot 2 bullets at a time
+        bulletSpeed: 6, // Faster bullets for level 3
       },
     },
   };

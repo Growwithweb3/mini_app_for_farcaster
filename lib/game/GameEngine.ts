@@ -62,10 +62,9 @@ export class GameEngine {
       // Enemy shoots at player
       if (enemy.canShoot(currentTime)) {
         const baseCenter = this.base.getCenter();
-        const bullet = enemy.shoot(baseCenter);
-        if (bullet) {
-          this.bullets.push(bullet);
-        }
+        const bullets = enemy.shoot(baseCenter);
+        // Add all bullets (supports multiple bullets for level 3 enemies)
+        this.bullets.push(...bullets);
       }
 
       // Check melee collision (Level 1 enemies)
@@ -206,10 +205,47 @@ export class GameEngine {
     // Draw enemies
     this.enemies.forEach((enemy) => enemy.draw(ctx));
 
-    // Draw bullets
+    // Draw bullets with improved visuals
     this.bullets.forEach((bullet) => {
-      ctx.fillStyle = bullet.isPlayerBullet ? '#3B82F6' : '#EF4444';
-      ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
+      const centerX = bullet.x + bullet.width / 2;
+      const centerY = bullet.y + bullet.height / 2;
+      const radius = Math.max(bullet.width, bullet.height) / 2;
+
+      if (bullet.isPlayerBullet) {
+        // Player bullets - blue with glow effect
+        const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
+        gradient.addColorStop(0, '#60A5FA'); // Bright blue center
+        gradient.addColorStop(0.5, '#3B82F6'); // Medium blue
+        gradient.addColorStop(1, '#1E40AF'); // Dark blue edge
+        
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Add outer glow
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = '#3B82F6';
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      } else {
+        // Enemy bullets - red with glow effect
+        const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
+        gradient.addColorStop(0, '#F87171'); // Bright red center
+        gradient.addColorStop(0.5, '#EF4444'); // Medium red
+        gradient.addColorStop(1, '#DC2626'); // Dark red edge
+        
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Add outer glow
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = '#EF4444';
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
     });
   }
 

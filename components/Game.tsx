@@ -69,7 +69,7 @@ export const Game: React.FC = () => {
     return () => clearInterval(interval);
   }, [keys]);
 
-  // Handle shooting with ArrowRight
+  // Handle shooting with ArrowRight - reduced fire rate
   useEffect(() => {
     let shootInterval: NodeJS.Timeout;
     
@@ -77,12 +77,12 @@ export const Game: React.FC = () => {
       const engine = gameEngineRef.current;
       if (!engine.gameState.isGameOver && !engine.gameState.isPaused) {
         engine.shoot();
-        // Allow shooting every 200ms
+        // Allow shooting every 350ms (reduced from 200ms for better balance)
         shootInterval = setInterval(() => {
           if (keys.has('ArrowRight') && !engine.gameState.isGameOver && !engine.gameState.isPaused) {
             engine.shoot();
           }
-        }, 200);
+        }, 350);
       }
     }
 
@@ -102,8 +102,17 @@ export const Game: React.FC = () => {
     gameEngine.base.moveDown(CANVAS_HEIGHT);
   }, []);
 
+  const lastShootTimeRef = useRef<number>(0);
+  const SHOOT_COOLDOWN = 350; // Same cooldown as keyboard (350ms)
+
   const handleShoot = useCallback(() => {
-    if (!gameEngine.gameState.isGameOver && !gameEngine.gameState.isPaused) {
+    const now = Date.now();
+    if (
+      !gameEngine.gameState.isGameOver && 
+      !gameEngine.gameState.isPaused &&
+      now - lastShootTimeRef.current >= SHOOT_COOLDOWN
+    ) {
+      lastShootTimeRef.current = now;
       gameEngine.shoot();
     }
   }, [gameEngine]);

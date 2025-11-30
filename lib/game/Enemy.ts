@@ -57,31 +57,66 @@ export class Enemy {
     );
   }
 
-  // Shoot bullet at player
-  shoot(playerPosition: Position): Bullet | null {
+  // Shoot bullet(s) at player - returns array for level 3 enemies (multiple bullets)
+  shoot(playerPosition: Position): Bullet[] {
     const currentTime = Date.now();
     if (!this.canShoot(currentTime)) {
-      return null;
+      return [];
     }
 
     this.lastShotTime = currentTime;
+
+    const bulletsPerShot = this.config.bulletsPerShot || 1;
+    const bulletSpeed = this.config.bulletSpeed || 4;
+    const bullets: Bullet[] = [];
 
     // Calculate direction to player
     const dx = playerPosition.x - this.position.x;
     const dy = playerPosition.y - this.position.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
-    const speed = 4;
 
-    return {
-      x: this.position.x,
-      y: this.position.y + this.size.height / 2,
-      vx: (dx / distance) * speed,
-      vy: (dy / distance) * speed,
-      width: 8,
-      height: 8,
-      isPlayerBullet: false,
-      damage: 10,
-    };
+    // For level 3 enemies, shoot 2 bullets with slight spread
+    if (bulletsPerShot === 2) {
+      // First bullet - slightly above center
+      const angle1 = Math.atan2(dy - 15, dx);
+      bullets.push({
+        x: this.position.x,
+        y: this.position.y + this.size.height / 2 - 8,
+        vx: Math.cos(angle1) * bulletSpeed,
+        vy: Math.sin(angle1) * bulletSpeed,
+        width: 10,
+        height: 10,
+        isPlayerBullet: false,
+        damage: 10,
+      });
+
+      // Second bullet - slightly below center
+      const angle2 = Math.atan2(dy + 15, dx);
+      bullets.push({
+        x: this.position.x,
+        y: this.position.y + this.size.height / 2 + 8,
+        vx: Math.cos(angle2) * bulletSpeed,
+        vy: Math.sin(angle2) * bulletSpeed,
+        width: 10,
+        height: 10,
+        isPlayerBullet: false,
+        damage: 10,
+      });
+    } else {
+      // Single bullet for level 2 enemies
+      bullets.push({
+        x: this.position.x,
+        y: this.position.y + this.size.height / 2,
+        vx: (dx / distance) * bulletSpeed,
+        vy: (dy / distance) * bulletSpeed,
+        width: 8,
+        height: 8,
+        isPlayerBullet: false,
+        damage: 10,
+      });
+    }
+
+    return bullets;
   }
 
   // Take damage
