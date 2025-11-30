@@ -57,7 +57,7 @@ export class EnemyFactory {
       [EnemyType.LINEA]: {
         type: EnemyType.LINEA,
         health: 50,
-        speed: 4,
+        speed: 1,
         imagePath: '/images/linea-the-enemy.png',
         width: 55,
         height: 55,
@@ -68,7 +68,7 @@ export class EnemyFactory {
       [EnemyType.OP]: {
         type: EnemyType.OP,
         health: 50,
-        speed: 4,
+        speed: 1,
         imagePath: '/images/op-the-enemy.jpg',
         width: 55,
         height: 55,
