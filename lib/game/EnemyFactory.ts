@@ -57,7 +57,7 @@ export class EnemyFactory {
       [EnemyType.LINEA]: {
         type: EnemyType.LINEA,
         health: 50,
-        speed: 5,
+        speed: 4,
         imagePath: '/images/linea-the-enemy.png',
         width: 55,
         height: 55,
@@ -68,7 +68,7 @@ export class EnemyFactory {
       [EnemyType.OP]: {
         type: EnemyType.OP,
         health: 50,
-        speed: 5,
+        speed: 4,
         imagePath: '/images/op-the-enemy.jpg',
         width: 55,
         height: 55,
@@ -81,7 +81,7 @@ export class EnemyFactory {
       [EnemyType.ARB]: {
         type: EnemyType.ARB,
         health: 100,
-        speed: 7.5,
+        speed: 5,
         imagePath: '/images/arb-the-enemy.jpg',
         width: 70,
         height: 70,
@@ -94,7 +94,7 @@ export class EnemyFactory {
       [EnemyType.POLYGON]: {
         type: EnemyType.POLYGON,
         health: 100,
-        speed: 7.5,
+        speed: 5,
         imagePath: '/images/polygon-the-enemy.jpg',
         width: 70,
         height: 70,
