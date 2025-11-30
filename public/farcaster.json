@@ -1,8 +1,8 @@
 {
   "name": "Base the Shooter",
-  "iconUrl": "https://baseshooter.xyz/icon.png",
-  "homeUrl": "https://baseshooter.xyz/",
-  "splashImageUrl": "https://baseshooter.xyz/splash.png",
+  "iconUrl": "https://mini-app-for-farcaster.vercel.app/icon.png",
+  "homeUrl": "https://mini-app-for-farcaster.vercel.app/",
+  "splashImageUrl": "https://mini-app-for-farcaster.vercel.app/splash.png",
   "splashBackgroundColor": "#000000",
   "requiredChains": ["eip155:8453"],
   "requiredCapabilities": ["actions.signIn", "wallet.getEthereumProvider"]
