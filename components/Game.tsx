@@ -12,9 +12,24 @@ const CANVAS_HEIGHT = 600;
 
 export const Game: React.FC = () => {
   const [showWelcome, setShowWelcome] = useState(true);
+  const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [gameEngine] = useState(() => new GameEngine(CANVAS_WIDTH, CANVAS_HEIGHT));
   const [keys, setKeys] = useState<Set<string>>(new Set());
   const gameEngineRef = useRef(gameEngine);
+  
+  // Track Level 3 completion state
+  const [level3Completed, setLevel3Completed] = useState(false);
+  const [mintingState, setMintingState] = useState<{
+    isLoading: boolean;
+    success: boolean;
+    error: string | null;
+    txHash: string | null;
+  }>({
+    isLoading: false,
+    success: false,
+    error: null,
+    txHash: null,
+  });
 
   // Update ref when game engine changes
   useEffect(() => {
@@ -136,9 +151,101 @@ export const Game: React.FC = () => {
     Math.ceil((gameEngine.gameState.levelDuration - (Date.now() - gameEngine.gameState.levelStartTime)) / 1000)
   );
 
+  // Check for Level 3 completion
+  useEffect(() => {
+    // Level 3 is completed when:
+    // 1. Game is over (isGameOver = true)
+    // 2. Current level is 3
+    // 3. Level 3 time duration has elapsed
+    if (
+      gameEngine.gameState.isGameOver &&
+      gameEngine.gameState.level === 3 &&
+      !level3Completed
+    ) {
+      setLevel3Completed(true);
+    }
+  }, [gameEngine.gameState.isGameOver, gameEngine.gameState.level, level3Completed]);
+
+  // Reset Level 3 completion when game resets
+  useEffect(() => {
+    if (gameEngine.gameState.level === 1 && level3Completed) {
+      setLevel3Completed(false);
+      setMintingState({
+        isLoading: false,
+        success: false,
+        error: null,
+        txHash: null,
+      });
+    }
+  }, [gameEngine.gameState.level, level3Completed]);
+
+  // Handle SBT minting
+  const handleMintSBT = async () => {
+    if (!walletAddress) {
+      setMintingState({
+        isLoading: false,
+        success: false,
+        error: 'Wallet address not found',
+        txHash: null,
+      });
+      return;
+    }
+
+    setMintingState({
+      isLoading: true,
+      success: false,
+      error: null,
+      txHash: null,
+    });
+
+    try {
+      const response = await fetch('/api/mint-sbt', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          address: walletAddress,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setMintingState({
+          isLoading: false,
+          success: true,
+          error: null,
+          txHash: data.txHash || null,
+        });
+      } else {
+        setMintingState({
+          isLoading: false,
+          success: false,
+          error: data.error || 'Failed to mint SBT',
+          txHash: null,
+        });
+      }
+    } catch (error: any) {
+      setMintingState({
+        isLoading: false,
+        success: false,
+        error: error.message || 'Network error occurred',
+        txHash: null,
+      });
+    }
+  };
+
   // Show welcome screen first
   if (showWelcome) {
-    return <WelcomeScreen onPlayGame={() => setShowWelcome(false)} />;
+    return (
+      <WelcomeScreen
+        onPlayGame={(address) => {
+          setWalletAddress(address);
+          setShowWelcome(false);
+        }}
+      />
+    );
   }
 
   return (
@@ -200,9 +307,62 @@ export const Game: React.FC = () => {
         {/* Game Over Overlay */}
         {gameEngine.gameState.isGameOver && (
           <div className="absolute inset-0 bg-black bg-opacity-75 flex items-center justify-center rounded-lg">
-            <div className="text-center text-white">
+            <div className="text-center text-white max-w-md px-6">
               <h2 className="text-4xl font-bold mb-4">Game Over!</h2>
               <p className="text-2xl mb-4">Final Score: {gameEngine.gameState.score}</p>
+              
+              {/* Level 3 Completion - Mint SBT Section */}
+              {level3Completed && gameEngine.gameState.level === 3 && (
+                <div className="mb-6 p-4 bg-gradient-to-r from-purple-900/80 to-blue-900/80 rounded-lg border-2 border-purple-500">
+                  <h3 className="text-2xl font-bold mb-2 text-yellow-300">🎉 Level 3 Completed!</h3>
+                  <p className="text-sm text-gray-300 mb-4">
+                    You've proven Base is the best L2! Mint your SBT to commemorate this achievement.
+                  </p>
+                  
+                  {/* Mint Button */}
+                  {!mintingState.success ? (
+                    <button
+                      onClick={handleMintSBT}
+                      disabled={mintingState.isLoading}
+                      className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 disabled:from-gray-600 disabled:to-gray-600 disabled:cursor-not-allowed text-white font-bold py-3 px-6 rounded-lg text-lg transition-all transform hover:scale-105 disabled:transform-none shadow-lg mb-2"
+                    >
+                      {mintingState.isLoading ? (
+                        <span className="flex items-center justify-center gap-2">
+                          <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                          </svg>
+                          Minting SBT...
+                        </span>
+                      ) : (
+                        '🎁 Mint SBT'
+                      )}
+                    </button>
+                  ) : (
+                    <div className="bg-green-900/50 border border-green-500 rounded-lg p-3 mb-2">
+                      <p className="text-green-200 font-bold mb-1">✓ SBT Minted Successfully!</p>
+                      {mintingState.txHash && (
+                        <a
+                          href={`https://basescan.org/tx/${mintingState.txHash}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-300 hover:text-blue-200 text-sm underline"
+                        >
+                          View on BaseScan
+                        </a>
+                      )}
+                    </div>
+                  )}
+                  
+                  {/* Error Message */}
+                  {mintingState.error && !mintingState.isLoading && (
+                    <div className="bg-red-900/50 border border-red-500 rounded-lg p-3 text-red-200 text-sm">
+                      {mintingState.error}
+                    </div>
+                  )}
+                </div>
+              )}
+              
               <button
                 onClick={handleReset}
                 className="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg text-xl font-bold transition-colors"

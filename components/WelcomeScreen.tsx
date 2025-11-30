@@ -5,7 +5,7 @@
 import React, { useState, useEffect } from 'react';
 
 interface WelcomeScreenProps {
-  onPlayGame: () => void;
+  onPlayGame: (walletAddress: string) => void;
 }
 
 interface WalletState {
@@ -234,9 +234,9 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onPlayGame }) => {
             )}
 
             {/* Play Game Button */}
-            {signedIn && (
+            {signedIn && wallet.address && (
               <button
-                onClick={onPlayGame}
+                onClick={() => onPlayGame(wallet.address!)}
                 className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-bold py-4 px-6 rounded-lg text-xl transition-all transform hover:scale-105 shadow-lg"
               >
                 🎮 Play Game
